@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h2>내가 저장한 웹 링크 목록</h2>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>이름</th>
+                <th>URL</th>
+                <th>카테고리</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for link in links %}
+                <tr>
+                    <td>{{ link.name }}</td>
+                    <td><a href="{{ link.url }}" target="_blank">{{ link.url }}</a></td>
+                    <td>{{ link.get_category_display }}</td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="3">저장된 링크가 없습니다.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <a href="{% url 'add_link' %}">새로운 링크 추가</a>
+{% endblock %}

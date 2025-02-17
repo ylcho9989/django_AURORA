@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h2>웹 링크 추가</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">추가하기</button>
+    </form>
+    <a href="{% url 'mainpage' %}">메인 페이지로 돌아가기</a>
+{% endblock %}
