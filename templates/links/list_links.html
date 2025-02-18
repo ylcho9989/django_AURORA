@@ -2,12 +2,30 @@
 
 {% block content %}
     <h2>내가 저장한 웹 링크 목록</h2>
+
+    <!-- 검색 폼 -->
+    <form method="get" action="{% url 'list_links' %}">
+        <input type="text" name="query" placeholder="검색어 입력" value="{{ query }}">
+        <select name="category">
+            <option value="">전체 카테고리</option>
+            <option value="personal" {% if category == 'personal' %} selected{% endif %}>개인 즐겨찾기</option>
+            <option value="work" {% if category == 'work' %} selected{% endif %}>업무 활용 자료</option>
+            <option value="reference" {% if category == 'reference' %} selected{% endif %}>참고 자료</option>
+            <option value="education" {% if category == 'education' %} selected{% endif %}>교육 및 학습 자료</option>
+        </select>
+        <button type="submit">검색</button>
+    </form>
+
+    <!-- 웹 링크 목록 테이블 -->
     <table border="1">
         <thead>
             <tr>
                 <th>이름</th>
                 <th>URL</th>
                 <th>카테고리</th>
+                <th>수정</th>
+                <th>삭제</th>
+                <th>공유</th>
             </tr>
         </thead>
         <tbody>
@@ -16,13 +34,43 @@
                     <td>{{ link.name }}</td>
                     <td><a href="{{ link.url }}" target="_blank">{{ link.url }}</a></td>
                     <td>{{ link.get_category_display }}</td>
+
+                    <!-- 수정 버튼 (소유자 또는 편집 권한이 있는 공유된 사용자만 가능) -->
+                    <td>
+                        {% if link.created_by == request.user or link in shared_editable_links %}
+                            <a href="{% url 'edit_link' link.id %}">수정</a>
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
+
+                    <!-- 삭제 버튼 (소유자 또는 편집 권한이 있는 공유된 사용자만 가능) -->
+                    <td>
+                        {% if link.created_by == request.user or link in shared_editable_links %}
+                            <a href="{% url 'delete_link' link.id %}">삭제</a>
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
+
+                    <!-- 공유 버튼 (소유자 또는 편집 권한이 있는 공유된 사용자만 가능) -->
+                    <td>
+                        {% if link.created_by == request.user or link in shared_editable_links %}
+                            <a href="{% url 'share_link' link.id %}">공유</a>
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
                 </tr>
             {% empty %}
                 <tr>
-                    <td colspan="3">저장된 링크가 없습니다.</td>
+                    <td colspan="6">저장된 링크가 없습니다.</td>
                 </tr>
             {% endfor %}
         </tbody>
     </table>
+
+    <!-- 새로운 링크 추가 버튼 -->
     <a href="{% url 'add_link' %}">새로운 링크 추가</a>
+
 {% endblock %}

@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h2>웹 링크 삭제</h2>
+    <p>정말로 "{{ link.name }}" 링크를 삭제하시겠습니까?</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit">삭제하기</button>
+    </form>
+    <a href="{% url 'list_links' %}">취소</a>
+{% endblock %}

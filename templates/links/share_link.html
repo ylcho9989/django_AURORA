@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h2>웹 링크 공유</h2>
+    <p>"{{ link.name }}" 링크를 공유할 사용자 이름을 입력하세요.</p>
+    <form method="post">
+        {% csrf_token %}
+        <label for="username">사용자 이름:</label>
+        <input type="text" name="username" required>
+        <br>
+        <label for="can_edit">
+            <input type="checkbox" name="can_edit"> 편집 가능 여부
+        </label>
+        <br>
+        <button type="submit">공유하기</button>
+    </form>
+    <a href="{% url 'list_links' %}">목록으로 돌아가기</a>
+{% endblock %}
